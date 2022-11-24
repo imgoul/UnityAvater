@@ -25,10 +25,7 @@ public class UCharacterMgr  {
 		return instance;
 	}
 
-	public void Removecharacter (CharacterController character)
-	{
 
-	}
 
 	public void Update () {
 

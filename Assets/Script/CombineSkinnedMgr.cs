@@ -20,9 +20,12 @@ public class UCombineSkinnedMgr {
 	public void CombineObject (GameObject skeleton, SkinnedMeshRenderer[] meshes, bool combine = false){
 
 		// Fetch all bones of the skeleton
-		List<Transform> transforms = new List<Transform>();
+		List<Transform> transforms = new List<Transform>();  //所有骨骼的transform
 		transforms.AddRange(skeleton.GetComponentsInChildren<Transform>(true));
 
+		
+	    //CombineInstance: unity的合并网络的类
+		
 		List<Material> materials = new List<Material>();//the list of materials
 		List<CombineInstance> combineInstances = new List<CombineInstance>();//the list of meshes
 		List<Transform> bones = new List<Transform>();//the list of bones
@@ -80,14 +83,16 @@ public class UCombineSkinnedMgr {
 			Vector2[] uva, uvb;
 			for (int j = 0; j < combineInstances.Count; j++)
 			{
-				uva = (Vector2[])(combineInstances[j].mesh.uv);
+				uva = (Vector2[])(combineInstances[j].mesh.uv);//获取网格所有顶点的UV信息
 				uvb = new Vector2[uva.Length];
 				for (int k = 0; k < uva.Length; k++)
 				{
+					//合并贴图以后，原来网格中顶点的uv信息变化了，重新计算uv坐标
 					uvb[k] = new Vector2((uva[k].x * uvs[j].width) + uvs[j].x, (uva[k].y * uvs[j].height) + uvs[j].y);
 				}
 				oldUV.Add(combineInstances[j].mesh.uv);
 				combineInstances[j].mesh.uv = uvb;
+				
 			}
 		}
 
@@ -103,10 +108,10 @@ public class UCombineSkinnedMgr {
 		r.bones = bones.ToArray();// Use new bones
 		if (combine)
 		{
-			r.material = newMaterial;
+			r.material = newMaterial;//将创建的新材质赋值给创建的skinnedMeshRenderer
 			for (int i = 0 ; i < combineInstances.Count ; i ++)
 			{
-				combineInstances[i].mesh.uv = oldUV[i];
+				combineInstances[i].mesh.uv = oldUV[i];//还原加载出来的mesh的uv坐标信息
 			}
 		}else
 		{
