@@ -41,9 +41,11 @@ public class UCharacterController
             string.Format("创建人物模型: \n index：{0} \n skeleton：{1} \n weapon：{2} \n head：{3} \n chest：{4} \n hand：{5} \n feet：{6} \n combine:{7}",
                 index, skeleton, weapon, head, chest, hand, feet, combine);
         Debug.Log(str);
-        //Creates the skeleton object
+        //加载人物骨骼预设
         Object res = Resources.Load("Prefab/" + skeleton);
+        //实例化骨骼
         this.Instance = GameObject.Instantiate(res) as GameObject;
+        
         this.index = index;
         this.skeleton = skeleton;
         this.equipment_head = head;
