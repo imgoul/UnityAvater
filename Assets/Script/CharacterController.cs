@@ -41,7 +41,8 @@ public class UCharacterController
             string.Format("创建人物模型: \n index：{0} \n skeleton：{1} \n weapon：{2} \n head：{3} \n chest：{4} \n hand：{5} \n feet：{6} \n combine:{7}",
                 index, skeleton, weapon, head, chest, hand, feet, combine);
         Debug.Log(str);
-        //加载人物骨骼预设
+        
+        //加载人物骨骼预设，骨骼预设没有网格
         Object res = Resources.Load("Prefab/" + skeleton);
         //实例化骨骼
         this.Instance = GameObject.Instantiate(res) as GameObject;
@@ -59,26 +60,30 @@ public class UCharacterController
         equipments[2] = hand;
         equipments[3] = feet;
 
-        // Create and collect other parts SkinnedMeshRenderer
+        // 创建需要用到的皮肤网格渲染器-SkinnedMeshRenderer
         SkinnedMeshRenderer[] meshes = new SkinnedMeshRenderer[4];
+        
+        
         GameObject[] objects = new GameObject[4];
         for (int i = 0; i < equipments.Length; i++)
         {
             res = Resources.Load("Prefab/" + equipments[i]);
             objects[i] = GameObject.Instantiate(res) as GameObject;
+            
+            //获取实例化的人物各个部件中的皮肤网格渲染器SkinnedMeshRenderer
             meshes[i] = objects[i].GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        // Combine meshes
+        // 合并人物的各个部分的网格为一个大网格
         App.Game.CharacterMgr.CombineSkinnedMgr.CombineObject(Instance, meshes, combine);
 
-        // Delete temporal resources
+        // 删除加载出的资源
         for (int i = 0; i < objects.Length; i++)
         {
             GameObject.DestroyImmediate(objects[i].gameObject);
         }
 
-        // Create weapon
+        // 创建武器
         res = Resources.Load("Prefab/" + weapon);
         WeaponInstance = GameObject.Instantiate(res) as GameObject;
 
